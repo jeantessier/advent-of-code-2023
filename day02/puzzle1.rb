@@ -4,26 +4,23 @@
 lines = File.readlines("puzzle1.input.txt") # Answer: 2913
 
 games = lines.map do |line|
-  m = /Game (\d+): (.*)/.match(line)
-  if m
-    {
-      game: m[1].to_i,
-      hands: m[2].split(";").map do |hand|
-        m_red = /(\d+) red/.match(hand)
-        m_green = /(\d+) green/.match(hand)
-        m_blue = /(\d+) blue/.match(hand)
-        {
-          red: m_red ? m_red[1].to_i : 0,
-          green: m_green ? m_green[1].to_i : 0,
-          blue: m_blue ? m_blue[1].to_i : 0,
-        }
-      end
-    }
-  else
-    nil
-  end
-end.filter do |game|
-  game
+  /Game (\d+): (.*)/.match(line)
+end.filter do |m|
+  m
+end.map do |m|
+  {
+    game: m[1].to_i,
+    hands: m[2].split(";").map do |hand|
+      m_red = /(\d+) red/.match(hand)
+      m_green = /(\d+) green/.match(hand)
+      m_blue = /(\d+) blue/.match(hand)
+      {
+        red: m_red ? m_red[1].to_i : 0,
+        green: m_green ? m_green[1].to_i : 0,
+        blue: m_blue ? m_blue[1].to_i : 0,
+      }
+    end
+  }
 end.each do |game|
   game[:max] = {
     red: game[:hands].map {|h| h[:red]}.max,
