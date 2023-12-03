@@ -11,22 +11,30 @@ end.map do |m|
   {
     game: m[1].to_i,
     hands: m[2].split(";").map do |hand|
-      m_red = /(\d+) red/.match(hand)
-      m_green = /(\d+) green/.match(hand)
-      m_blue = /(\d+) blue/.match(hand)
-      {
-        red: m_red ? m_red[1].to_i : 0,
-        green: m_green ? m_green[1].to_i : 0,
-        blue: m_blue ? m_blue[1].to_i : 0,
-      }
+      result = {}
+      result.default = 0
+
+      hand.split(",").reduce(result) do |memo, obj|
+        match = /(\d+) (\w+)/.match(obj)
+        if match
+          memo[match[2].to_sym] += match[1].to_i
+        end
+        memo
+      end
+      
+      result
     end
   }
 end.each do |game|
-  game[:max] = {
-    red: game[:hands].map {|h| h[:red]}.max,
-    green: game[:hands].map {|h| h[:green]}.max,
-    blue: game[:hands].map {|h| h[:blue]}.max,
-  }
+  keys = game[:hands].reduce({}) {|memo, obj| memo.merge(obj)}.keys
+
+  game[:max] = {}
+  game[:max].default = 0
+
+  keys.reduce(game[:max]) do |memo, key|
+    memo[key] = game[:hands].map {|h| h[key]}.max
+    memo
+  end
 end
 
 puts "Games"
@@ -40,9 +48,7 @@ target = {
 }
 
 possible_games = games.filter do |game|
-  game[:max][:red] <= target[:red] &&
-    game[:max][:green] <= target[:green] &&
-    game[:max][:blue] <= target[:blue]
+  target.keys.all? {|k| game[:max][k] <= target[k]}
 end
 
 puts ""
