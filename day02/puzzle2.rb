@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-# lines = File.readlines("sample.txt") # Answer: 8
-lines = File.readlines("input.txt") # Answer: 2913
+# lines = File.readlines("sample.txt") # Answer: 2286
+lines = File.readlines("input.txt") # Answer: 55593
 
 games = lines.map do |line|
   /Game (\d+): (.*)/.match(line)
@@ -37,29 +37,15 @@ end.each do |game|
     memo[key] = game[:subsets].map {|h| h[key]}.max
     memo
   end
+
+  game[:power] = game[:max].values.reduce(1) {|memo, v| memo * v}
 end
 
 puts "Games"
 puts "-----"
 puts games
 
-target = {
-  red: 12,
-  green: 13,
-  blue: 14,
-}
-
-# Find games that are possible, given `target`.
-possible_games = games.filter do |game|
-  target.keys.all? {|k| game[:max][k] <= target[k]}
-end
-
-puts ""
-puts "Possible Games"
-puts "--------------"
-puts possible_games
-
 puts ""
 puts "Answer"
 puts "------"
-puts possible_games.map {|g| g[:game]}.sum
+puts games.map {|g| g[:power]}.sum
