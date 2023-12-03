@@ -8,13 +8,14 @@ games = lines.map do |line|
 end.filter do |m|
   m
 end.map do |m|
+  # Parse each game into its subsets
   {
     game: m[1].to_i,
-    hands: m[2].split(";").map do |hand|
+    subsets: m[2].split(";").map do |subset|
       result = {}
       result.default = 0
 
-      hand.split(",").reduce(result) do |memo, obj|
+      subset.split(",").reduce(result) do |memo, obj|
         match = /(\d+) (\w+)/.match(obj)
         if match
           memo[match[2].to_sym] += match[1].to_i
@@ -26,13 +27,14 @@ end.map do |m|
     end
   }
 end.each do |game|
-  keys = game[:hands].reduce({}) {|memo, obj| memo.merge(obj)}.keys
+  # Find the maximum of each color seen during this game
+  keys = game[:subsets].reduce({}) {|memo, obj| memo.merge(obj)}.keys
 
   game[:max] = {}
   game[:max].default = 0
 
   keys.reduce(game[:max]) do |memo, key|
-    memo[key] = game[:hands].map {|h| h[key]}.max
+    memo[key] = game[:subsets].map {|h| h[key]}.max
     memo
   end
 end
@@ -47,6 +49,7 @@ target = {
   blue: 14,
 }
 
+# Find games that are possible, given `target`.
 possible_games = games.filter do |game|
   target.keys.all? {|k| game[:max][k] <= target[k]}
 end
