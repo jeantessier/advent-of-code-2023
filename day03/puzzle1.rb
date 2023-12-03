@@ -1,14 +1,14 @@
 #!/usr/bin/env ruby
 
 # lines = File.readlines("sample1.txt") # Answer: 4361
-lines = File.readlines("input1.txt") # Answer: 498835
+lines = File.readlines("input1.txt") # Answer: 520019
 
 def dump_map(name, map, mark = 'T')
   puts name
   map.each {|row| puts row.map {|c| c ? mark : '.'}.join}
 end
 
-SYMBOLS = %w[# $ % * + - / = @]
+SYMBOLS = %w[# $ % & * + - / = @]
 
 # Find where all the symbols are
 symbol_map = lines.map {|line| line.chars.map {|c| SYMBOLS.include?(c)}}
