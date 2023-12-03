@@ -1,14 +1,7 @@
 #!/usr/bin/env ruby
 
-lines = """two1nine
-eightwothree
-abcone2threexyz
-xtwone3four
-4nineeightseven2
-zoneight234
-7qprstsixteen""".lines
-
-lines = File.readlines("input.txt")
+lines = File.readlines("sample2.txt") # Answer: 281
+# lines = File.readlines("input.txt") # Answer: 52840
 
 word_to_i = {
   one: 1,
@@ -24,8 +17,8 @@ word_to_i = {
 word_to_i.default = 0
 
 calibration_values = lines.map do |line|
-  m1 = /(\d|one|two|three|four|five|six|seven|eight|nine)/.match(line)
-  m2 = /.*(\d|one|two|three|four|five|six|seven|eight|nine)/.match(line)
+  m1 = /(\d|#{word_to_i.keys.join('|')})/.match(line)
+  m2 = /.*(\d|#{word_to_i.keys.join('|')})/.match(line)
   puts "m1[1]: #{m1[1]}, m2[1]: #{m2[1]}"
   i1 = m1[1].to_i
   i2 = m2[1].to_i
