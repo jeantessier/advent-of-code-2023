@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-# lines = File.readlines("sample1.txt") # Answer: 4361
-lines = File.readlines("input1.txt") # Answer: 520019
+# lines = File.readlines("sample.txt") # Answer: 4361
+lines = File.readlines("input.txt") # Answer: 520019
 
 def dump_map(name, map, mark = 'T')
   puts name
@@ -43,10 +43,6 @@ end
 dump_map "adjacency_map", adjacency_map
 
 puts ""
-
-# Find where all the numbers are
-number_map = lines.map {|line| line.chars.map {|c| c =~ /\d/}}
-dump_map "number_map", number_map
 
 # Find the part numbers
 
