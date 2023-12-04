@@ -58,7 +58,7 @@ regex = /(\d+)/
 lines.each_index do |i|
   offset = 0
   while (match = regex.match(lines[i], offset))
-    adjacent_gears = adjacency_map[i].slice(match.begin(1), match[1].size).filter {|c| not c.empty?}.flatten
+    adjacent_gears = adjacency_map[i].slice(match.begin(1), match[1].size).reject {|c| c.empty?}.flatten
     Set.new(adjacent_gears).each do |gear|
       gear_to_part_number[gear] << match[1].to_i
       puts "#{match.begin(1)}..#{match.end(1) - 1}: #{match[1]} --> #{gear}"
