@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
 # lines = File.readlines("sample1.txt") # Answer: 13
-lines = File.readlines("input1.txt") # Answer: 6306
+lines = File.readlines("input1.txt") # Answer: 17782
 
 cards = lines.map do |line|
-  /Card \d+:\s*(?<winning>.+)\s*\|\s*(?<yours>.+)/.match(line)
+  /Card\s+\d+:\s*(?<winning>.+)\s*\|\s*(?<yours>.+)/.match(line)
 end.filter do |m|
   m
 end.map do |m|
