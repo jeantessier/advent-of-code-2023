@@ -63,12 +63,12 @@ puts maps
 # as per the source-to-destination map.  Source and destination
 # ranges overlap arbitrarily, with possible gaps.
 def resolve(maps, source, source_ranges)
-  puts ""
-  puts "Resolving #{source}"
-
   # End the recursion if there are no more conversions.
   map = maps.find {|m| m[:source] == source}
   return source_ranges unless map
+
+  puts ""
+  puts "Resolving #{source} --> #{map[:destination]}"
 
   # Each mapping shows how a portion of the source space
   # maps to a portion of the destination space.  Together,
@@ -166,16 +166,9 @@ def resolve(maps, source, source_ranges)
   resolve(maps, map[:destination], destination_ranges)
 end
 
-locations = resolve(maps, "seed", seed_ranges)
-
-puts ""
-puts "Locations"
-puts "---------"
-locations.each do |range|
-  puts "#{range} (#{range.size})"
-end
+location_ranges = resolve(maps, "seed", seed_ranges)
 
 puts ""
 puts "Answer"
 puts "------"
-puts locations.map {|r| r.min}.min
+puts location_ranges.map {|range| range.min}.min
