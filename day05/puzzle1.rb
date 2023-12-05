@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-# lines = File.readlines("sample1.txt") # Answer: 35
-lines = File.readlines("input1.txt") # Answer: 282277027
+# lines = File.readlines("sample.txt") # Answer: 35
+lines = File.readlines("input.txt") # Answer: 282277027
 
 # Parse the seeds
 seeds = lines
