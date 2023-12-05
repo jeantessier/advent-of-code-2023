@@ -25,9 +25,6 @@ puts "-----------"
 puts seed_ranges
 
 # Parse all the maps
-
-# puts ""
-
 maps = []
 
 current_map = {}
@@ -62,16 +59,20 @@ puts "Maps"
 puts "----"
 puts maps
 
-puts ""
-puts "Resolving Seed Ranges"
-puts "---------------------"
-
+# A helper method to a set of source ranges to destination ranges,
+# as per the source-to-destination map.  Source and destination
+# ranges overlap arbitrarily, with possible gaps.
 def resolve(maps, source, source_ranges)
   puts ""
   puts "Resolving #{source}"
+
+  # End the recursion if there are no more conversions.
   map = maps.find {|m| m[:source] == source}
   return source_ranges unless map
 
+  # Each mapping shows how a portion of the source space
+  # maps to a portion of the destination space.  Together,
+  # they cover the whole source space.
   mappings = source_ranges.map do |source_range|
 
     # Mappings from mapped conversions
@@ -148,7 +149,7 @@ def resolve(maps, source, source_ranges)
   puts "--------"
   puts mappings
 
-  destination_mappings = mappings.map do |mapped_range|
+  destination_ranges = mappings.map do |mapped_range|
     mapped_range[map[:destination]]
   end.map do |range|
     (range.min)..(range.max)
@@ -157,13 +158,12 @@ def resolve(maps, source, source_ranges)
   end
 
   puts ""
-  puts "#{map[:destination]} mappings"
+  puts "#{map[:destination]} ranges"
   puts "-----------------"
-  puts destination_mappings
+  puts destination_ranges
 
-  resolve(maps, map[:destination], destination_mappings)
-  # destination_mappings
-
+  # Recursively do the next conversion
+  resolve(maps, map[:destination], destination_ranges)
 end
 
 locations = resolve(maps, "seed", seed_ranges)
