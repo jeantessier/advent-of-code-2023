@@ -91,4 +91,4 @@ puts ways
 puts ""
 puts "Answer"
 puts "------"
-puts ways.reduce(1) {|memo, n| memo * n}
+puts ways.reduce(:*)
