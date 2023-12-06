@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-# lines = File.readlines("sample1.txt") # Answer: 288
-lines = File.readlines("input1.txt") # Answer:
+# lines = File.readlines("sample.txt") # Answer: 288
+lines = File.readlines("input.txt") # Answer: 588588
 
 times = lines
           .grep(/Time/)
