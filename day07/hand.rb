@@ -49,7 +49,7 @@ class Hand
                 when [2, 1, 1, 1]
                   ONE_PAIR
                 else
-                  FIVE_OF_A_KIND
+                  HIGH_CARD
                 end
               end
   end

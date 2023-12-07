@@ -4,7 +4,7 @@ require './hand'
 
 # lines = readlines # Answer:
 # lines = File.readlines("sample1.txt") # Answer: 6440
-lines = File.readlines("input1.txt") # Answer: 246441954
+lines = File.readlines("input1.txt") # Answer: 249483956
 
 hands = lines
           .map {|line| /(?<cards>.*)\s+(?<bid>\d+)/.match(line)}
