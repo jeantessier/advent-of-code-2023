@@ -4,7 +4,7 @@
 lines = File.readlines("input.txt") # Answer: 8477787
 
 cards = lines.map do |line|
-  /Card\s+(?<card>\d+):\s*(?<winning>.+)\s*\|\s*(?<yours>.+)/.match(line)
+  /Card1\s+(?<card>\d+):\s*(?<winning>.+)\s*\|\s*(?<yours>.+)/.match(line)
 end.filter do |m|
   m
 end.map do |m|

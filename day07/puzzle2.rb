@@ -1,15 +1,15 @@
 #!/usr/bin/env ruby
 
-require './hand1'
+require './hand2'
 
 # lines = readlines
-# lines = File.readlines("sample.txt") # Answer: 6440
-lines = File.readlines("input.txt") # Answer: 249483956
+# lines = File.readlines("sample.txt") # Answer: 5905
+lines = File.readlines("input.txt") # Answer: 252137472
 
 hands = lines
           .map {|line| /(?<cards>.*)\s+(?<bid>\d+)/.match(line)}
           .filter {|m| m}
-          .map {|m| Hand1.new m[:cards], m[:bid].to_i}
+          .map {|m| Hand2.new m[:cards], m[:bid].to_i}
 
 puts "Hands"
 puts "-----"

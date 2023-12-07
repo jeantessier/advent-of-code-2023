@@ -1,6 +1,6 @@
-require './card'
+require './card2'
 
-class Hand
+class Hand2
   attr_reader :input, :bid
   attr_accessor :rank
 
@@ -18,16 +18,24 @@ class Hand
   end
 
   def cards
-    @cards ||= input.split('').map {|c| Card.new(c)}
+    @cards ||= input.split('').map {|c| Card2.new(c)}
   end
 
   def histo
     @histo ||= begin
+                 puts "histo"
+                 puts "  cards: #{cards}"
                  result = {}
                  result.default = 0
                  cards.reduce(result) do |memo, card|
                    memo[card.value] += 1
                    memo
+                 end
+                 puts "  raw_histo: #{result}"
+                 if result.size > 1 and result.has_key? 'J'
+                   jokers = result.delete 'J'
+                   highest_card = result.sort {|a, b| a[1] <=> b[1]}.reverse.first[0]
+                   result[highest_card] += jokers
                  end
                  result.values.sort.reverse
                end
