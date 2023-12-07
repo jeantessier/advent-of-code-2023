@@ -21,39 +21,6 @@ puts "Races"
 puts "-----"
 puts races
 
-#
-# Races for a quadratic function.
-# For a race of 'n' milliseconds,
-# if you hold the buttons for 'x' milliseconds,
-# your boat will go a distance of (n-x) * x millimeters.
-#
-# Or f(x) = (n-x) * x
-#         = -1 * x**2 - n * x
-#
-# If we are looking to beat a distance 'd',
-# we look for f(d) > d.
-#
-# f(x) > d => f(x) - d > 0
-#          => -1 * x**2 - n * x - d > 0
-#
-# This is the quadratic function ax^2 + bx + c
-# where:
-#        a = -1
-#        b = n (the time limit for the race)
-#        c = -d (the distance record to beat)
-#
-# We can find the roots of this quadratic function
-# using the quadratic formula:
-#
-#       -b +/- sqrt(b^2 - 4ac)
-#       ----------------------
-#                2a
-#
-# We need to beat the record, so we can find the two
-# integers that are greater than each roots and count
-# the integers in that range.
-#
-
 def quadratic_roots(a:, b:, c:)
   [
     ((-1 * b + Math.sqrt(b**2 - 4*a*c)) / 2*a),
