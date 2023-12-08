@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
 # lines = readlines
-# lines = File.readlines("sample1.txt") # Answer: 2
-# lines = File.readlines("sample2.txt") # Answer: 6
+# lines = File.readlines("sample1a.txt") # Answer: 2
+# lines = File.readlines("sample2b.txt") # Answer: 6
 lines = File.readlines("input.txt") # Answer: 17873
 
 map = lines
