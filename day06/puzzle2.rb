@@ -6,12 +6,12 @@ lines = File.readlines("input.txt") # Answer: 34655848
 times = lines
           .grep(/Time/)
           .map {|line| line.gsub(/[^\d]/, '')}
-          .map {|s| s.to_i}
+          .map(&:to_i)
 
 distances = lines
               .grep(/Distance/)
               .map {|line| line.gsub(/[^\d]/, '')}
-              .map {|s| s.to_i}
+              .map(&:to_i)
 
 races = times
           .zip(distances)

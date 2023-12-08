@@ -5,17 +5,17 @@ lines = File.readlines("input.txt") # Answer: 588588
 
 times = lines
           .grep(/Time/)
-          .map {|line| line.split}
+          .map(&:split)
           .flatten
           .filter {|s| s =~ /\d+/}
-          .map {|s| s.to_i}
+          .map(&:to_i)
 
 distances = lines
           .grep(/Distance/)
-          .map {|line| line.split}
+          .map(&:split)
           .flatten
           .filter {|s| s =~ /\d+/}
-          .map {|s| s.to_i}
+          .map(&:to_i)
 
 races = times
           .zip(distances)
