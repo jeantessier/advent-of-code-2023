@@ -1,71 +1,11 @@
 #!/usr/bin/env ruby
 
-lines = readlines
+# lines = readlines
 # lines = File.readlines("sample2a.txt") # Answer: 4
 # lines = File.readlines("sample2b.txt") # Answer: 4
 # lines = File.readlines("sample2c.txt") # Answer: 8
 # lines = File.readlines("sample2d.txt") # Answer: 10
-# lines = File.readlines("input.txt") # Answer: 317
-
-class Cell
-  attr_reader :glyph, :x, :y
-
-  def initialize(glyph, x, y)
-    @glyph = glyph
-    @x = x
-    @y = y
-  end
-
-  def next(arriving_from)
-    case arriving_from
-    in :north
-      case glyph
-      in '|'
-        :south
-      in 'L'
-        :east
-      in 'J'
-        :west
-      else
-        throw Exception.new("[#{x}, #{y}] does not connect to #{arriving_direction}")
-      end
-    in :east
-      case glyph
-      in '-'
-        :west
-      in 'L'
-        :north
-      in 'F'
-        :south
-      else
-        throw Exception.new("[#{x}, #{y}] does not connect to #{arriving_direction}")
-      end
-    in :south
-      case glyph
-      in '|'
-        :north
-      in '7'
-        :west
-      in 'F'
-        :east
-      else
-        throw Exception.new("[#{x}, #{y}] does not connect to #{arriving_direction}")
-      end
-    in :west
-      case glyph
-      in '-'
-        :east
-      in 'J'
-        :north
-      in '7'
-        :south
-      else
-        throw Exception.new("[#{x}, #{y}] does not connect to #{arriving_direction}")
-      end
-    end
-  end
-
-end
+lines = File.readlines("input.txt") # Answer: 317 (in 356 ms)
 
 map = lines
   .map do |line|
@@ -95,27 +35,14 @@ end
 
 puts "Map"
 puts "---"
-# puts original_map.original_map {|row| row.to_s}
-
-map.each_with_index do |row, i|
-  text = ""
-  row.each_with_index do |cell, j|
-    text << cell[:glyph]
-  end
-  puts text
+map.each do |row|
+  puts row.map {|cell| cell[:glyph]}.join
 end
 
-def find_start(map)
-  result = {}
-
-  result[:x] = map.find_index do |row|
-    result[:y] = row.find_index {|cell| cell[:start]}
-  end
-
-  result
+START = {}
+START[:x] = map.find_index do |row|
+  START[:y] = row.find_index {|cell| cell[:start]}
 end
-
-START = find_start map
 
 puts ""
 puts "Start"
@@ -139,18 +66,16 @@ def next_step(map, navigation)
   end
 end
 
-def follow_loop(original_map, map_copy, navigation)
+def follow_pipe(original_map, map_copy, navigation)
   x = navigation[:x]
   y = navigation[:y]
-  from = navigation[:arriving_from]
 
   until navigation[:x] == START[:x] and navigation[:y] == START[:y]
     navigation = next_step(original_map, navigation)
     map_copy[x][y] = original_map[x][y][:glyph]
-    puts "[#{x}, #{y}] #{navigation[:going]}"
+    puts "[#{x}, #{y}] going #{navigation[:going]}"
     x = navigation[:x]
     y = navigation[:y]
-    from = navigation[:arriving_from]
   end
 end
 
@@ -165,12 +90,12 @@ end
 simplified_map[START[:x]][START[:y]] = 'S'
 
 begin
-  follow_loop(map, simplified_map, {x: START[:x] - 1, y: START[:y], arriving_from: :south})
+  follow_pipe(map, simplified_map, { x: START[:x] - 1, y: START[:y], arriving_from: :south})
 rescue
   begin
-    follow_loop(map, simplified_map, {x: START[:x], y: START[:y] + 1, arriving_from: :west})
+    follow_pipe(map, simplified_map, { x: START[:x], y: START[:y] + 1, arriving_from: :west})
   rescue
-    follow_loop(map, simplified_map, {x: START[:x] + 1, y: START[:y], arriving_from: :north})
+    follow_pipe(map, simplified_map, { x: START[:x] + 1, y: START[:y], arriving_from: :north})
   end
 end
 
@@ -181,6 +106,7 @@ simplified_map.each do |row|
   puts row.join
 end
 
+# Determining 'I' (in) and 'O' (out) of enclosed by loop areas
 simplified_map.each_with_index do |row, x|
   row.each_with_index do |cell, y|
     if cell == ' '
@@ -194,12 +120,13 @@ simplified_map.each_with_index do |row, x|
 end
 
 puts ""
-puts "Colored Map"
-puts "-----------"
+puts "Enclosure Map"
+puts "-------------"
 simplified_map.each do |row|
   puts row.join
 end
 
+# Counting the 'I's
 answer = simplified_map.map do |row|
   row.filter {|cell| cell == 'I'}.count
 end.sum
