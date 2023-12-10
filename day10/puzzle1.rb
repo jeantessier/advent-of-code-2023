@@ -106,5 +106,5 @@ puts total_steps
 
 puts ""
 puts "Answer"
-puts "-----------"
+puts "------"
 puts (total_steps / 2.0).round

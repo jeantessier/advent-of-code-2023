@@ -5,7 +5,7 @@
 # lines = File.readlines("sample2b.txt") # Answer: 4
 # lines = File.readlines("sample2c.txt") # Answer: 8
 # lines = File.readlines("sample2d.txt") # Answer: 10
-lines = File.readlines("input.txt") # Answer: 317 (in 356 ms)
+lines = File.readlines("input.txt") # Answer: 317 (in 312 ms)
 
 map = lines
   .map do |line|
@@ -107,14 +107,20 @@ simplified_map.each do |row|
 end
 
 # Determining 'I' (in) and 'O' (out) of enclosed by loop areas
+# by counting the number of times we cross the pipe.  We choose
+# to check horizontally from the western edge of the map because
+# that's the easiest with our map data structure.
 simplified_map.each_with_index do |row, x|
   row.each_with_index do |cell, y|
     if cell == ' '
-      left_part = row[0..y].join.gsub(/(L-*7)|(F-*J)/, '|').split('')
-      right_part = row[y..].join.gsub(/(L-*7)|(F-*J)/, '|').split('')
-      pipes_to_the_left = left_part.filter {|c| c == '|'}.count
-      pipes_to_the_right = right_part.filter {|c| c == '|'}.count
-      simplified_map[x][y] = ((pipes_to_the_left % 2 == 1) and (pipes_to_the_right % 2 == 1)) ? 'I' : 'O'
+      crossing_pipes_to_the_western_edge =
+        row[0..y]
+          .join
+          .gsub(/(L-*7)|(F-*J)/, '|')
+          .split('')
+          .filter {|c| c == '|'}
+          .count
+      simplified_map[x][y] = (crossing_pipes_to_the_western_edge % 2 == 1) ? 'I' : 'O'
     end
   end
 end
@@ -133,5 +139,5 @@ end.sum
 
 puts ""
 puts "Answer"
-puts "-----------"
+puts "------"
 puts answer
