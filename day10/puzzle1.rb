@@ -5,7 +5,7 @@ lines = readlines
 # lines = File.readlines("sample1b.txt") # Answer: 4
 # lines = File.readlines("sample1c.txt") # Answer: 8
 # lines = File.readlines("sample1d.txt") # Answer: 8
-# lines = File.readlines("input.txt") # Answer:
+# lines = File.readlines("input.txt") # Answer: 7086
 
 class Cell
   attr_reader :glyph, :x, :y
@@ -122,30 +122,39 @@ puts "Start"
 puts "-----"
 puts START
 
-def next_step(map, x, y, arriving_from, steps)
-  current_cell = map[x][y]
-  next_direction = current_cell[:traversals][arriving_from]
-  puts "#{steps}: [#{x}, #{y}] --> #{next_direction}"
+def next_step(map, navigation)
+  current_cell = map[navigation[:x]][navigation[:y]]
+  next_direction = current_cell[:traversals][navigation[:arriving_from]]
   case next_direction
   in :north
-    {x: x - 1, y: y, arriving_from: :south}
+    {x: navigation[:x] - 1, y: navigation[:y], going: :north, arriving_from: :south}
   in :east
-    {x: x, y: y + 1, arriving_from: :west}
+    {x: navigation[:x], y: navigation[:y] + 1, going: :east, arriving_from: :west}
   in :south
-    {x: x + 1, y: y, arriving_from: :north}
+    {x: navigation[:x] + 1, y: navigation[:y], going: :south, arriving_from: :north}
   in :west
-    {x: x, y: y - 1, arriving_from: :east}
+    {x: navigation[:x], y: navigation[:y] - 1, going: :west, arriving_from: :east}
   else
-    throw Exception.new "Cannot arrive to [#{x}, #{y}] from #{arriving_from}"
+    throw Exception.new "Cannot arrive to [#{navigation[:x]}, #{navigation[:y]}] from #{navigation[:arriving_from]}"
   end
 end
 
-def follow_loop(map, x, y, arriving_from, steps = 0)
-  return steps if x == START[:x] and y == START[:y]
+def follow_loop(map, navigation)
+  x = navigation[:x]
+  y = navigation[:y]
+  from = navigation[:arriving_from]
+  num_steps = 1
 
-  step = next_step(map, x, y, arriving_from, steps)
+  until navigation[:x] == START[:x] and navigation[:y] == START[:y]
+    navigation = next_step(map, navigation)
+    puts "#{num_steps} [#{x}, #{y}] #{navigation[:going]}"
+    x = navigation[:x]
+    y = navigation[:y]
+    from = navigation[:arriving_from]
+    num_steps += 1
+  end
 
-  follow_loop(map, step[:x], step[:y], step[:arriving_from], steps + 1)
+  num_steps
 end
 
 puts ""
@@ -153,12 +162,12 @@ puts "Following Pipe"
 puts "--------------"
 total_steps = 0
 begin
-  total_steps = follow_loop(map, START[:x] - 1, START[:y], :south, 1)
+  total_steps = follow_loop(map, {x: START[:x] - 1, y: START[:y], arriving_from: :south})
 rescue
   begin
-    total_steps = follow_loop(map, START[:x], START[:y] + 1, :west, 1)
+    total_steps = follow_loop(map, {x: START[:x], y: START[:y] + 1, arriving_from: :west})
   rescue
-    total_steps = follow_loop(map, START[:x] + 1, START[:y], :north, 1)
+    total_steps = follow_loop(map, {x: START[:x] + 1, y: START[:y], arriving_from: :north})
   end
 end
 
@@ -166,7 +175,6 @@ puts ""
 puts "Total Steps"
 puts "-----------"
 puts total_steps
-
 
 puts ""
 puts "Answer"
