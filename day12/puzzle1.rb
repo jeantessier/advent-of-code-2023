@@ -61,15 +61,12 @@ end.map do |patterns|
   pattern = patterns[0]
   regex = patterns[1]
 
-  # pattern.split('').filter {|c| c == '?'}.count
   g = Generator.new pattern
   g.filter do |s|
     m = regex.match(s)
     # puts "#{regex}.match(\"#{s}\"): #{m}"
     m
   end.count
-end.map do |count|
-  count
 end
 
 puts ""
