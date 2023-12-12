@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-lines = readlines
-# lines = File.readlines("sample.txt") # Answer: 525152 (in 4,297 ms) (21 when folded, in 46 ms)
-# lines = File.readlines("input.txt") # Answer:  (in  ms)
+# lines = readlines
+# lines = File.readlines("sample.txt") # Answer: 525152 (in 72 ms) (21 when folded, in 46 ms)
+lines = File.readlines("input.txt") # Answer: 1909291258644 (in 4,843 ms)
 
 records = lines.map do |line|
   line.split
@@ -43,8 +43,14 @@ parsed_criteria.each do |records|
   puts records.to_s
 end
 
+CACHE = {}
+
 def search(s, criteria, indent = 0)
   # puts "#{'  ' * indent}search(\"#{s}\", #{criteria})"
+
+  cache_key = "\"#{s}\", #{criteria}"
+  return CACHE[cache_key] if CACHE[cache_key]
+
   (cons, *cdr) = criteria
 
   text = s.gsub(/^\.+/, '').gsub(/\.+$/, '')
@@ -67,6 +73,7 @@ def search(s, criteria, indent = 0)
 
   end
 
+  CACHE[cache_key] = count
   # puts "#{'  ' * indent}search(\"#{s}\", #{criteria}) --> #{count}"
   count
 end
