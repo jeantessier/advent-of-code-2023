@@ -7,6 +7,12 @@ Finding horizontal mirrors was simple enough: compare groups of lines.  Finding
 vertical mirrors was a little more tricky.  I had to build regexes to tease out
 possible mirror positions and find cases where all rows matched a given regex.
 
+> Other people realized you can transpose the input and use the same method to
+> find mirrors.  One dimension by looking at the original input, the other
+> dimension by looking at the transposed copy.  I wish I'd thought of that
+> instead of messing around with regexes.  "Jean had a problem.  Jean used
+> regex.  Now, Jean has two problems."
+
 Part 1 showed that patterns had at most one horizontal and at most one vertical
 mirror each.  I didn't check for "both" or "neither" cases.
 
