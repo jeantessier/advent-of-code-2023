@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-lines = readlines
+# lines = readlines
 # lines = File.readlines("sample.txt") # Answer: 400 (in 62 ms)
-# lines = File.readlines("input.txt") # Answer: 30442 (in 1,656 ms)
+lines = File.readlines("input.txt") # Answer: 30442 (in 1,656 ms)
 
 patterns = []
 
@@ -27,7 +27,6 @@ puts patterns.size
 puts ""
 puts "Patterns"
 puts "--------"
-# puts patterns.to_s
 patterns.each do |pattern|
   puts "#{pattern.size} x #{pattern.first.size} = #{pattern.size * pattern.first.size}"
 end
