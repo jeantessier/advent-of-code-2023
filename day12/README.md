@@ -16,3 +16,24 @@ was much faster.  But still a slug when applied to the Part 2 problem.
 
 I looked at the trace of an example and noticed **a lot** of repeat processing.
 I put in a cache and it ran in 4 seconds.  I should have caught that earlier.
+
+I initially wrote some tests for the `#search` function using a bespoke test
+function.  After I was done with the puzzle, I migrated these tests to RSpec.
+You can run them with:
+
+```bash
+./bin/rspec search_tests.rb
+```
+
+Or see the full list of tests with:
+
+```bash
+./bin/rspec --format documentation search_tests.rb
+```
+
+> You may need to install RSpec with:
+> 
+> ```bash
+> bundle install
+> bundle binstubs --all
+> ```

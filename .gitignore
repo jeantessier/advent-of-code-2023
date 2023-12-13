@@ -1,5 +1,8 @@
 stats.csv
 *~
 
+# Bundle working folder
+.bundle
+
 # Ignore IDE files
 .idea
