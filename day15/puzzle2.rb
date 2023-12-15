@@ -60,7 +60,6 @@ focusing_powers = boxes.flat_map do |num, box|
   box.each_with_index do |lens, i|
     results << (1 + num) * (i + 1) * lens[:focal_length]
   end
-  puts "Box #{num}: #{results}"
   results
 end
 
