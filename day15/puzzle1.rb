@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-lines = readlines
+# lines = readlines
 # lines = File.readlines("sample.txt") # Answer: 1320 (in 45 ms)
-# lines = File.readlines("input.txt") # Answer: 498538 (in 220 ms)
+lines = File.readlines("input.txt") # Answer: 498538 (in 220 ms)
 
 steps = lines
   .map(&:chomp)
