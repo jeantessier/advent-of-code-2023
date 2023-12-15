@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-# lines = readlines
+lines = readlines
 # lines = File.readlines("sample.txt") # Answer: 1320 (in 45 ms)
-lines = File.readlines("input.txt") # Answer: 498538 (in 220 ms)
+# lines = File.readlines("input.txt") # Answer: 498538 (in 220 ms)
 
 steps = lines
   .map(&:chomp)
@@ -14,13 +14,17 @@ steps.each do |step|
   puts "#{step} (#{step.ascii_only? ? "ascii-only" : "NOT ascii-only"})"
 end
 
-hashes = steps.map do |step|
-  step.bytes.reduce(0) do |memo, b|
-    memo += b
-    memo *= 17
-    memo %= 256
+class String
+  def reindeer_hash
+    bytes.reduce(0) do |memo, b|
+      memo += b
+      memo *= 17
+      memo %= 256
+    end
   end
 end
+
+hashes = steps.map(&:reindeer_hash)
 
 puts ""
 puts "Hashes"
