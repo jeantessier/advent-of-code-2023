@@ -20,5 +20,8 @@ time it is called.  This means we do **a lot** of filtering.
 Part 2 ran in 2 minutes and 1 second.
 
 It might be faster to track each wavelength separately, in a hash of arrays in
-each cell, so we wouldn't have to do so much filtering.  At this point, it might
-be even faster to simply reset the grid between each starting position.
+each cell, so we wouldn't have to do so much filtering.  It ran in 8,261 ms.
+That's a 15x improvement.
+
+It's possible it could be even faster to simply reset the grid between each
+starting position.

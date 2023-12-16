@@ -2,7 +2,7 @@
 
 # lines = readlines
 # lines = File.readlines("sample.txt") # Answer: 51 (in 67 ms)
-lines = File.readlines("input.txt") # Answer: 8221 (in 121,390 ms)
+lines = File.readlines("input.txt") # Answer: 8221 (in 8,261 ms)
 
 class Beam
   attr_reader :from, :to, :wavelength
@@ -38,7 +38,8 @@ class Cell
 
   def initialize(c)
     @cell = c
-    @beams = []
+    @beams = {}
+    @beams.default_proc = lambda {|hash, wavelength| hash[wavelength] = []}
   end
 
   def add_beam(from, wavelength)
@@ -59,23 +60,23 @@ class Cell
 
     results = results.reject do |beam|
       # puts "  *** beams.include? beam ==> #{beams}.include? #{beam} ==> #{beams.include?(beam) ? 'REJECTED' : 'OK'}"
-      beams.include? beam
+      beams[wavelength].include? beam
     end
 
-    results.each {|beam| beams << beam}
+    results.each {|beam| beams[wavelength] << beam}
 
     results
   end
 
   def energized?(wavelength)
-    not beams.filter {|beam| beam.wavelength == wavelength}.empty?
+    not beams[wavelength].empty?
   end
 
   def to_s(wavelength)
-    return cell if cell != '.' or beams.filter {|beam| beam.wavelength == wavelength}.empty?
-    return beams.size.to_s if beams.size > 2
+    return cell if cell != '.' or beams[wavelength].empty?
+    return beams[wavelength].size.to_s if beams[wavelength].size > 2
 
-    case beams.first.to
+    case beams[wavelength].first.to
     in :rightward
       ">"
     in :upward
