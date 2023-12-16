@@ -24,4 +24,6 @@ each cell, so we wouldn't have to do so much filtering.  It ran in 8,261 ms.
 That's a 15x improvement.
 
 It's possible it could be even faster to simply reset the grid between each
-starting position.
+starting position.  I tried it in `puzzle2_lazy.rb`.  It even shows a histogram
+of how may starting positions result in a give number of energized cells.  It
+ran in 3,758 ms.  That's a further 2x improvement.
