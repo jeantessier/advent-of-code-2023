@@ -23,9 +23,11 @@ The correct regex is `/((ddd)|u)$/`.  Times four for the others directions.
 With this simple fix, I was able to run against the sample input successfully in
 under 700 milliseconds.  The real input will take a few hours to work through.
 
-I tried switching to a `Heap` to store candidates instead of sorting an array
-every time.  It accelerated the run against the sample data from 682 ms down to
-462 ms.
+I tried switching to a `Heap` (from the
+[`rb_heap`](https://rubygems.org/gems/rb_heap) gem) to store candidates instead
+of sorting an array every time.  It accelerated the run against the sample data
+from 682 ms down to 462 ms.  I suspect `Array#sort` is `O(n log n)` or worse.
+The `Heap` should be able to inser in `O(log n)` and keep its contents sorted.
 
 I need to use Bundle to run the puzzle.
 
