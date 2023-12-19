@@ -27,7 +27,7 @@ I tried switching to a `Heap` (from the
 [`rb_heap`](https://rubygems.org/gems/rb_heap) gem) to store candidates instead
 of sorting an array every time.  It accelerated the run against the sample data
 from 682 ms down to 462 ms.  I suspect `Array#sort` is `O(n log n)` or worse.
-The `Heap` should be able to inser in `O(log n)` and keep its contents sorted.
+The `Heap` should be able to insert in `O(log n)` and keep its contents sorted.
 
 I need to use Bundle to run the puzzle.
 
@@ -35,3 +35,19 @@ I need to use Bundle to run the puzzle.
 bundle install # first time only
 bundle exec ./puzzle1.rb
 ```
+
+But that wasn't good enough for a 142x142 map.  There are too many possible
+possible paths through the middle.
+
+I tried various ways to tease the algorithm in the right direction.  I used a
+Dijkstra algorithm to find estimated distances to the destination and use that
+to guide the search.  It got close, but not to the smallest solution.  I tried
+the reverse, to use Dijkstra to find the distance from the current node.  I
+tried to combine the two, either by adding them up or substracting them, trying
+to find hints as to the optimal path.
+
+I finally saw someone else comment that they used results from Dijkstra to guide
+an [A* algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm).  I was
+very close to that.  A* combines "cost so far" with "estimate to goal".  I had
+tried either by itself, but not combined.  It works well on the sample data,
+but the 142x142 real input will still take a while.
