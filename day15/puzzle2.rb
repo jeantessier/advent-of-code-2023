@@ -29,12 +29,12 @@ boxes.default_proc = lambda {|hash, key| hash[key] = []}
 
 steps.each do |step|
   case step
-  in /(\w+)-/
+  when /(\w+)-/
     label = $1
     hash = label.reindeer_hash
     box = boxes[hash]
     box.delete_if {|lens| lens[:label] == label}
-  in /(\w+)=(\d+)/
+  when /(\w+)=(\d+)/
     label = $1
     focal_length = $2.to_i
     new_lens = {label: label, focal_length: focal_length}

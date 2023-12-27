@@ -13,20 +13,13 @@ map = lines
       .split('')
       .map do |cell|
         case cell
-        in '|'
-          {glyph: cell, start: false, traversals: {north: :south, south: :north}}
-        in '-'
-          {glyph: cell, start: false, traversals: {east: :west, west: :east}}
-        in 'L'
-          {glyph: cell, start: false, traversals: {north: :east, east: :north}}
-        in 'J'
-          {glyph: cell, start: false, traversals: {north: :west, west: :north}}
-        in '7'
-          {glyph: cell, start: false, traversals: {south: :west, west: :south}}
-        in 'F'
-          {glyph: cell, start: false, traversals: {south: :east, east: :south}}
-        in 'S'
-          {glyph: cell, start: true, traversals: {}}
+        when '|' then {glyph: cell, start: false, traversals: {north: :south, south: :north}}
+        when '-' then {glyph: cell, start: false, traversals: {east: :west, west: :east}}
+        when 'L' then {glyph: cell, start: false, traversals: {north: :east, east: :north}}
+        when 'J' then {glyph: cell, start: false, traversals: {north: :west, west: :north}}
+        when '7' then {glyph: cell, start: false, traversals: {south: :west, west: :south}}
+        when 'F' then {glyph: cell, start: false, traversals: {south: :east, east: :south}}
+        when 'S' then {glyph: cell, start: true, traversals: {}}
         else
           {glyph: cell, start: false, traversals: {}}
         end
@@ -53,14 +46,10 @@ def next_step(map, navigation)
   current_cell = map[navigation[:x]][navigation[:y]]
   next_direction = current_cell[:traversals][navigation[:arriving_from]]
   case next_direction
-  in :north
-    {x: navigation[:x] - 1, y: navigation[:y], going: :north, arriving_from: :south}
-  in :east
-    {x: navigation[:x], y: navigation[:y] + 1, going: :east, arriving_from: :west}
-  in :south
-    {x: navigation[:x] + 1, y: navigation[:y], going: :south, arriving_from: :north}
-  in :west
-    {x: navigation[:x], y: navigation[:y] - 1, going: :west, arriving_from: :east}
+  when :north then {x: navigation[:x] - 1, y: navigation[:y], going: :north, arriving_from: :south}
+  when :east then {x: navigation[:x], y: navigation[:y] + 1, going: :east, arriving_from: :west}
+  when :south then {x: navigation[:x] + 1, y: navigation[:y], going: :south, arriving_from: :north}
+  when :west then {x: navigation[:x], y: navigation[:y] - 1, going: :west, arriving_from: :east}
   else
     throw Exception.new "Cannot arrive to [#{navigation[:x]}, #{navigation[:y]}] from #{navigation[:arriving_from]}"
   end

@@ -15,14 +15,10 @@ class Beam
 
   def next_coordinates(x, y)
     case to
-    in :rightward
-      {x: x, y: y + 1, direction: to, wavelength: wavelength}
-    in :downward
-      {x: x + 1, y: y, direction: to, wavelength: wavelength}
-    in :leftward
-      {x: x, y: y - 1, direction: to, wavelength: wavelength}
-    in :upward
-      {x: x - 1, y: y, direction: to, wavelength: wavelength}
+    when :rightward then {x: x, y: y + 1, direction: to, wavelength: wavelength}
+    when :downward then {x: x + 1, y: y, direction: to, wavelength: wavelength}
+    when :leftward then {x: x, y: y - 1, direction: to, wavelength: wavelength}
+    when :upward then {x: x - 1, y: y, direction: to, wavelength: wavelength}
     else
       raise "Unknown direction \"#{from}\""
     end
@@ -43,20 +39,14 @@ class Cell
   end
 
   def add_beam(from, wavelength)
-    results = []
-
-    case from
-    in :rightward
-      results = add_rightward_beam(wavelength)
-    in :downward
-      results = add_downward_beam(wavelength)
-    in :leftward
-      results = add_leftward_beam(wavelength)
-    in :upward
-      results = add_upward_beam(wavelength)
-    else
-      raise "Unknown direction \"#{from}\""
-    end
+    results = case from
+              when :rightward then add_rightward_beam(wavelength)
+              when :downward then add_downward_beam(wavelength)
+              when :leftward then add_leftward_beam(wavelength)
+              when :upward then add_upward_beam(wavelength)
+              else
+                raise "Unknown direction \"#{from}\""
+              end
 
     results = results.reject do |beam|
       # puts "  *** beams.include? beam ==> #{beams}.include? #{beam} ==> #{beams.include?(beam) ? 'REJECTED' : 'OK'}"
@@ -77,14 +67,10 @@ class Cell
     return beams[wavelength].size.to_s if beams[wavelength].size > 2
 
     case beams[wavelength].first.to
-    in :rightward
-      ">"
-    in :upward
-      "^"
-    in :leftward
-      "<"
-    in :downward
-      "v"
+    when :rightward then ">"
+    when :upward then "^"
+    when :leftward then "<"
+    when :downward then "v"
     else
       raise "Unknown direction \"#{from}\""
     end
@@ -94,15 +80,15 @@ class Cell
 
   def add_rightward_beam(wavelength)
     case cell
-    in '/'
+    when '/'
       [
         Beam.new(:rightward, :upward, wavelength),
       ]
-    in '\\'
+    when '\\'
       [
         Beam.new(:rightward, :downward, wavelength),
       ]
-    in '|'
+    when '|'
       [
         Beam.new(:rightward, :upward, wavelength),
         Beam.new(:rightward, :downward, wavelength),
@@ -116,15 +102,15 @@ class Cell
 
   def add_downward_beam(wavelength)
     case cell
-    in '/'
+    when '/'
       [
         Beam.new(:downward, :leftward, wavelength),
       ]
-    in '\\'
+    when '\\'
       [
         Beam.new(:downward, :rightward, wavelength),
       ]
-    in '-'
+    when '-'
       [
         Beam.new(:downward, :leftward, wavelength),
         Beam.new(:downward, :rightward, wavelength),
@@ -138,15 +124,15 @@ class Cell
 
   def add_leftward_beam(wavelength)
     case cell
-    in '/'
+    when '/'
       [
         Beam.new(:leftward, :downward, wavelength),
       ]
-    in '\\'
+    when '\\'
       [
         Beam.new(:leftward, :upward, wavelength),
       ]
-    in '|'
+    when '|'
       [
         Beam.new(:leftward, :upward, wavelength),
         Beam.new(:leftward, :downward, wavelength),
@@ -160,15 +146,15 @@ class Cell
 
   def add_upward_beam(wavelength)
     case cell
-    in '/'
+    when '/'
       [
         Beam.new(:upward, :rightward, wavelength),
       ]
-    in '\\'
+    when '\\'
       [
         Beam.new(:upward, :leftward, wavelength),
       ]
-    in '-'
+    when '-'
       [
         Beam.new(:upward, :leftward, wavelength),
         Beam.new(:upward, :rightward, wavelength),

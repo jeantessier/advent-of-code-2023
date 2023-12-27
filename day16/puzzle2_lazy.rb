@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-lines = readlines
+# lines = readlines
 # lines = File.readlines("sample.txt") # Answer: 51 (in 42 ms)
-# lines = File.readlines("input.txt") # Answer: 8221 (in 3,758 ms)
+lines = File.readlines("input.txt") # Answer: 8221 (in 3,758 ms)
 
 class Beam
   attr_reader :from, :to
@@ -14,14 +14,10 @@ class Beam
 
   def next_coordinates(x, y)
     case to
-    in :rightward
-      {x: x, y: y + 1, direction: to}
-    in :downward
-      {x: x + 1, y: y, direction: to}
-    in :leftward
-      {x: x, y: y - 1, direction: to}
-    in :upward
-      {x: x - 1, y: y, direction: to}
+    when :rightward then {x: x, y: y + 1, direction: to}
+    when :downward then {x: x + 1, y: y, direction: to}
+    when :leftward then {x: x, y: y - 1, direction: to}
+    when :upward then {x: x - 1, y: y, direction: to}
     else
       raise "Unknown direction \"#{from}\""
     end
@@ -41,20 +37,14 @@ class Cell
   end
 
   def add_beam(from)
-    results = []
-
-    case from
-    in :rightward
-      results = add_rightward_beam
-    in :downward
-      results = add_downward_beam
-    in :leftward
-      results = add_leftward_beam
-    in :upward
-      results = add_upward_beam
-    else
-      raise "Unknown direction \"#{from}\""
-    end
+    results = case from
+              when :rightward then add_rightward_beam
+              when :downward then add_downward_beam
+              when :leftward then add_leftward_beam
+              when :upward then add_upward_beam
+              else
+                raise "Unknown direction \"#{from}\""
+              end
 
     results = results.reject do |beam|
       # puts "  *** beams.include? beam ==> #{beams}.include? #{beam} ==> #{beams.include?(beam) ? 'REJECTED' : 'OK'}"
@@ -79,14 +69,10 @@ class Cell
     return beams.size.to_s if beams.size > 2
 
     case beams.first.to
-    in :rightward
-      ">"
-    in :upward
-      "^"
-    in :leftward
-      "<"
-    in :downward
-      "v"
+    when :rightward then ">"
+    when :upward then "^"
+    when :leftward then "<"
+    when :downward then "v"
     else
       raise "Unknown direction \"#{from}\""
     end
@@ -96,15 +82,15 @@ class Cell
 
   def add_rightward_beam
     case cell
-    in '/'
+    when '/'
       [
         Beam.new(:rightward, :upward),
       ]
-    in '\\'
+    when '\\'
       [
         Beam.new(:rightward, :downward),
       ]
-    in '|'
+    when '|'
       [
         Beam.new(:rightward, :upward),
         Beam.new(:rightward, :downward),
@@ -118,15 +104,15 @@ class Cell
 
   def add_downward_beam
     case cell
-    in '/'
+    when '/'
       [
         Beam.new(:downward, :leftward),
       ]
-    in '\\'
+    when '\\'
       [
         Beam.new(:downward, :rightward),
       ]
-    in '-'
+    when '-'
       [
         Beam.new(:downward, :leftward),
         Beam.new(:downward, :rightward),
@@ -140,15 +126,15 @@ class Cell
 
   def add_leftward_beam
     case cell
-    in '/'
+    when '/'
       [
         Beam.new(:leftward, :downward),
       ]
-    in '\\'
+    when '\\'
       [
         Beam.new(:leftward, :upward),
       ]
-    in '|'
+    when '|'
       [
         Beam.new(:leftward, :upward),
         Beam.new(:leftward, :downward),
@@ -162,15 +148,15 @@ class Cell
 
   def add_upward_beam
     case cell
-    in '/'
+    when '/'
       [
         Beam.new(:upward, :rightward),
       ]
-    in '\\'
+    when '\\'
       [
         Beam.new(:upward, :leftward),
       ]
-    in '-'
+    when '-'
       [
         Beam.new(:upward, :leftward),
         Beam.new(:upward, :rightward),
