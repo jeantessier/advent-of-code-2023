@@ -235,6 +235,7 @@ def min_heat_loss(heat_loss_map)
     if next_step.x == x_bounds.max and next_step.y == y_bounds.max and total_heat_loss < best_so_far
       best_so_far = total_heat_loss
       best_path_so_far = next_step.path
+      puts "best_so_far: #{best_so_far} \"#{best_path_so_far}\""
     end
 
     # puts ""
@@ -256,7 +257,7 @@ def min_heat_loss(heat_loss_map)
         unless next_step.coords.include?([next_step.x - 1, next_step.y])
           potential_heat_loss = total_heat_loss + heat_loss_map[next_step.x - 1][next_step.y]
           # puts ":up    | pot: #{potential_heat_loss} >= best: #{best_so_far} (#{potential_heat_loss >= best_so_far}) | pot: #{potential_heat_loss} > seen #{seen_so_far[next_step.x - 1][next_step.y]} (#{potential_heat_loss > seen_so_far[next_step.x - 1][next_step.y]})"
-          unless potential_heat_loss >= best_so_far or potential_heat_loss > seen_so_far[next_step.x - 1][next_step.y]
+          unless potential_heat_loss >= best_so_far or potential_heat_loss >= seen_so_far[next_step.x - 1][next_step.y]
             # new_candidate = MinHeatLossCandidate.new(next_step.x - 1, next_step.y, revised_dijkstra_map[next_step.x - 1][next_step.y], potential_heat_loss, next_step.path + "u", next_step.coords.clone)
             new_candidate = MinHeatLossCandidate.new(next_step.x - 1, next_step.y, dijkstra_map[next_step.x - 1][next_step.y], potential_heat_loss, next_step.path + "u", next_step.coords.clone)
             # puts "candidate: #{new_candidate}"
@@ -272,7 +273,7 @@ def min_heat_loss(heat_loss_map)
         unless next_step.coords.include?([next_step.x, next_step.y + 1])
           potential_heat_loss = total_heat_loss + heat_loss_map[next_step.x][next_step.y + 1]
           # puts ":right | pot: #{potential_heat_loss} >= best: #{best_so_far} (#{potential_heat_loss >= best_so_far}) | pot: #{potential_heat_loss} > seen #{seen_so_far[next_step.x][next_step.y + 1]} (#{potential_heat_loss > seen_so_far[next_step.x][next_step.y + 1]})"
-          unless potential_heat_loss >= best_so_far or potential_heat_loss > seen_so_far[next_step.x][next_step.y + 1]
+          unless potential_heat_loss >= best_so_far or potential_heat_loss >= seen_so_far[next_step.x][next_step.y + 1]
             # new_candidate = MinHeatLossCandidate.new(next_step.x, next_step.y + 1, revised_dijkstra_map[next_step.x][next_step.y + 1], potential_heat_loss, next_step.path + "r", next_step.coords.clone)
             new_candidate = MinHeatLossCandidate.new(next_step.x, next_step.y + 1, dijkstra_map[next_step.x][next_step.y + 1], potential_heat_loss, next_step.path + "r", next_step.coords.clone)
             # puts "candidate: #{new_candidate}"
@@ -288,7 +289,7 @@ def min_heat_loss(heat_loss_map)
         unless next_step.coords.include?([next_step.x + 1, next_step.y])
           potential_heat_loss = total_heat_loss + heat_loss_map[next_step.x + 1][next_step.y]
           # puts ":down  | pot: #{potential_heat_loss} >= best: #{best_so_far} (#{potential_heat_loss >= best_so_far}) | pot: #{potential_heat_loss} > seen #{seen_so_far[next_step.x + 1][next_step.y]} (#{potential_heat_loss > seen_so_far[next_step.x + 1][next_step.y]})"
-          unless potential_heat_loss >= best_so_far or potential_heat_loss > seen_so_far[next_step.x + 1][next_step.y]
+          unless potential_heat_loss >= best_so_far or potential_heat_loss >= seen_so_far[next_step.x + 1][next_step.y]
             # new_candidate = MinHeatLossCandidate.new(next_step.x + 1, next_step.y, revised_dijkstra_map[next_step.x + 1][next_step.y], potential_heat_loss, next_step.path + "d", next_step.coords.clone)
             new_candidate = MinHeatLossCandidate.new(next_step.x + 1, next_step.y, dijkstra_map[next_step.x + 1][next_step.y], potential_heat_loss, next_step.path + "d", next_step.coords.clone)
             # puts "candidate: #{new_candidate}"
@@ -304,7 +305,7 @@ def min_heat_loss(heat_loss_map)
         unless next_step.coords.include?([next_step.x, next_step.y - 1])
           potential_heat_loss = total_heat_loss + heat_loss_map[next_step.x][next_step.y - 1]
           # puts ":left  | pot: #{potential_heat_loss} >= best: #{best_so_far} (#{potential_heat_loss >= best_so_far}) | pot: #{potential_heat_loss} > seen #{seen_so_far[next_step.x][next_step.y - 1]} (#{potential_heat_loss > seen_so_far[next_step.x][next_step.y - 1]})"
-          unless potential_heat_loss >= best_so_far or potential_heat_loss > seen_so_far[next_step.x][next_step.y - 1]
+          unless potential_heat_loss >= best_so_far or potential_heat_loss >= seen_so_far[next_step.x][next_step.y - 1]
             # new_candidate = MinHeatLossCandidate.new(next_step.x, next_step.y - 1, revised_dijkstra_map[next_step.x][next_step.y - 1], potential_heat_loss, next_step.path + "l", next_step.coords.clone)
             new_candidate = MinHeatLossCandidate.new(next_step.x, next_step.y - 1, dijkstra_map[next_step.x][next_step.y - 1], potential_heat_loss, next_step.path + "l", next_step.coords.clone)
             # puts "candidate: #{new_candidate}"
@@ -327,6 +328,9 @@ def min_heat_loss(heat_loss_map)
   seen_so_far
 end
 
+puts ""
+puts "Minimal Heat Loss"
+puts "-----------------"
 min_heat_loss_map = min_heat_loss(heat_loss_map)
 
 puts ""

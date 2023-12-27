@@ -51,3 +51,9 @@ an [A* algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm).  I was
 very close to that.  A* combines "cost so far" with "estimate to goal".  I had
 tried either by itself, but not combined.  It works well on the sample data,
 but the 142x142 real input will still take a while.
+
+My solution creates a new record every time it considers a node.  That means
+there are many more nodes in the heap than in the grid itself.  I need to do
+better memory management by updating nodes in the heap instead of collecting
+many, many copies.  I cannot update a random element in the heap and expect it
+to remain sorted.  I'll have to find an efficient way to reorder the heap.
