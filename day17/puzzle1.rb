@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
 
 require 'rb_heap'
+require './dijkstra'
 
 lines = readlines
-# lines = File.readlines("sample.txt") # Answer: 102 (in 284 ms)
+# lines = File.readlines("sample.txt") # Answer: 102 (in 1,239 ms, was 284 ms)
 # lines = File.readlines("input.txt") # Answer:  (in  ms)
 
 heat_loss_map = lines
@@ -25,93 +26,11 @@ puts "Heat Loss Map"
 puts "-------------"
 print_map(heat_loss_map)
 
-class DijkstraCandidate
-  attr_reader :x, :y
-  attr_accessor :distance
+x_bounds = 0...(heat_loss_map.size)
+y_bounds = 0...(heat_loss_map.first.size)
+cost_function = lambda {|x, y| heat_loss_map[x][y]}
 
-  def initialize(x, y)
-    @x = x
-    @y = y
-    @distance = Float::INFINITY
-  end
-
-  def <=>(other)
-    distance <=> other.distance
-  end
-
-  def to_s
-    "[#{x}, #{y}]: #{distance}"
-  end
-end
-
-def dijkstra(map, x: nil, y: nil)
-  result_map = map.collect do |row|
-    row.collect do |_|
-      Float::INFINITY
-    end
-  end
-
-  x_bounds = 0...(map.size)
-  y_bounds = 0...(map.first.size)
-
-  x ||= x_bounds.max
-  y ||= y_bounds.max
-
-  heap = []
-
-  map.each_with_index do |row, x|
-    row.each_with_index do |_, y|
-      heap << DijkstraCandidate.new(x, y)
-    end
-  end
-
-  heap.find {|c| c.x == x and c.y == y}.distance = 0
-  # heap.find {|c| c.x == x_bounds.max and c.y == y_bounds.max}.distance = 0
-
-  until heap.empty?
-    candidate = heap.sort!.shift
-
-    result_map[candidate.x][candidate.y] = candidate.distance
-
-    # break if candidate.x == x and candidate.y == y
-
-    if x_bounds.include?(candidate.x - 1) # :up
-      neighbor = heap.find {|c| c.x == candidate.x - 1 and c.y == candidate.y}
-      if neighbor
-        new_distance = candidate.distance + map[candidate.x - 1][candidate.y]
-        neighbor.distance = new_distance if new_distance < neighbor.distance
-      end
-    end
-
-    if y_bounds.include?(candidate.y + 1) # :right
-      neighbor = heap.find {|c| c.x == candidate.x and c.y == candidate.y + 1}
-      if neighbor
-        new_distance = candidate.distance + map[candidate.x][candidate.y + 1]
-        neighbor.distance = new_distance if new_distance < neighbor.distance
-      end
-    end
-
-    if x_bounds.include?(candidate.x + 1) # :down
-      neighbor = heap.find {|c| c.x == candidate.x + 1 and c.y == candidate.y}
-      if neighbor
-        new_distance = candidate.distance + map[candidate.x + 1][candidate.y]
-        neighbor.distance = new_distance if new_distance < neighbor.distance
-      end
-    end
-
-    if y_bounds.include?(candidate.y - 1) # :left
-      neighbor = heap.find {|c| c.x == candidate.x and c.y == candidate.y - 1}
-      if neighbor
-        new_distance = candidate.distance + map[candidate.x][candidate.y - 1]
-        neighbor.distance = new_distance if new_distance < neighbor.distance
-      end
-    end
-  end
-
-  result_map
-end
-
-dijkstra_map = dijkstra(heat_loss_map)
+dijkstra_map = Dijkstra::dijkstra(x_bounds, y_bounds, cost_function)
 
 puts ""
 puts "Dijkstra Map"
@@ -199,7 +118,7 @@ def min_heat_loss(heat_loss_map)
   x_bounds = 0...(heat_loss_map.size)
   y_bounds = 0...(heat_loss_map.first.size)
 
-  destination_dijkstra_map = dijkstra(heat_loss_map)
+  destination_dijkstra_map = dijkstra(x_bounds, y_bounds, lambda {|x, y| heat_loss_map[x][y]})
 
   best_so_far = Float::INFINITY
   best_path_so_far = ""
