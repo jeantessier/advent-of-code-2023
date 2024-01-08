@@ -1,5 +1,6 @@
 stats.csv
 *~
+*.out
 
 # Bundle working folder
 .bundle
