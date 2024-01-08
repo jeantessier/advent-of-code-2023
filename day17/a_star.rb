@@ -48,35 +48,35 @@ module AStar
   class DeterminedNeighbor
     include Comparable
 
-    attr_reader :a_star_result
+    attr_reader :neighbor
 
-    def initialize(a_star_result, direction)
-      @a_star_result = a_star_result
-      @direction = direction
+    def initialize(neighbor, direction_from_neighbor)
+      @neighbor = neighbor
+      @direction_from_neighbor = direction_from_neighbor
     end
 
     def x
-      a_star_result.x
+      neighbor.x
     end
 
     def y
-      a_star_result.y
+      neighbor.y
     end
 
     def cost
-      a_star_result.cost
+      neighbor.cost
     end
 
     def path
-      @path ||= a_star_result.path + @direction
+      @path ||= neighbor.path + @direction_from_neighbor
     end
 
     def <=>(other)
-      a_star_result <=> other.a_star_result
+      neighbor <=> other.neighbor
     end
 
     def to_s
-      "[#{x}, #{y}]: #{cost} \"#{a_star_result.path}\"+\"#{@direction}\""
+      "[#{x}, #{y}]: #{cost} \"#{neighbor.path}\"+\"#{@direction_from_neighbor}\""
     end
   end
 
@@ -154,7 +154,7 @@ module AStar
         )
       puts "result: #{results[current.x][current.y]}"
 
-      # Terminate early if we reach the goal
+      # Terminate early if we've reached the goal
       puts "BREAK!!!" if goal_function.call(current.x, current.y)
       break if goal_function.call(current.x, current.y)
 
