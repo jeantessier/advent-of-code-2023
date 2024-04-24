@@ -1,5 +1,7 @@
 module Dijkstra
   class Candidate
+    include Comparable
+
     attr_reader :x, :y
     attr_accessor :distance
 
