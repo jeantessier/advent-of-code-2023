@@ -6,9 +6,10 @@ GEM
 PLATFORMS
   arm64-darwin-22
   arm64-darwin-23
+  arm64-darwin-24
 
 DEPENDENCIES
   rb_heap
 
 BUNDLED WITH
-   2.5.18
+   2.5.23
