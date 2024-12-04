@@ -2,7 +2,7 @@
 
 # lines = readlines
 # lines = File.readlines('sample.txt') # Answer: 62 (in 62 ms)
-lines = File.readlines('input.txt') # Answer: 44436 (in 3,644 ms)  ** too high **
+lines = File.readlines('input.txt') # Answer: 44436 (in 3,644 ms) (48 passes)
 
 REGEX = /(?<direction>[DLRU]) (?<distance>\d+) \(#(?<rgb>\h{6})\)/
 
@@ -132,70 +132,8 @@ while previous_volume != new_volume
   puts "new_volume: #{new_volume}"
 end
 
-# def top_left_segment(map, x, y)
-#   return '' if x.zero?
-#
-#   map[x - 1][0...y].join
-# end
-#
-# def left_segment(map, x, y)
-#   map[x][0...y].join
-# end
-#
-# def bottom_left_segment(map, x, y)
-#   return '' if x == map.size - 1
-#
-#   map[x + 1][0...y].join
-# end
-#
-# # Count the number of transitions from the left edge to (x, y).
-# # If odd, we're inside the path.  If even, we're outside.
-# def inside?(map, x, y)
-#   puts "x: #{x}, y: #{y}"
-#
-#   top_left_segment = top_left_segment(map, x, y)
-#   top_left_crossings = top_left_segment.scan(/#+/).size
-#   puts "top_left_segment: #{top_left_segment} (#{top_left_crossings})"
-#
-#   left_segment = left_segment(map, x, y)
-#   left_crossings = left_segment.scan(/#+/).size
-#   puts "left segment: #{left_segment} (#{left_crossings})"
-#
-#   bottom_left_segment = bottom_left_segment(map, x, y)
-#   bottom_left_crossings = bottom_left_segment.scan(/#+/).size
-#   puts "bottom_left_segment: #{bottom_left_segment} (#{bottom_left_crossings})"
-#
-#   (top_left_crossings.odd? && left_crossings.odd? && bottom_left_crossings.odd?)
-# end
-#
-# x_range.each do |x|
-#   y_range.each do |y|
-#     next unless map[x][y] == '.'
-#     map[x][y] = ' ' if inside?(map, x, y)
-#   end
-# end
-
-# def inside?(map, x, y, x_range: nil, y_range: nil)
-#   x_range ||= 0..(map.size - 1)
-#   y_range ||= 0..(map.first.size - 1)
-#
-#   (x_range.first...x).any? { |dx| map[dx][y] == '#' } &&
-#     ((x + 1)..x_range.last).any? { |dx| map[dx][y] == '#' } &&
-#     (y_range.first...y).any? { |dy| map[x][dy] == '#' } &&
-#     ((y + 1)..y_range.last).any? { |dy| map[x][dy] == '#' }
-# end
-#
-# x_range.each do |x|
-#   y_range.each do |y|
-#     next unless map[x][y] == '.'
-#     if inside?(map, x, y, x_range:, y_range:)
-#       map[x][y] = '#'
-#     end
-#   end
-# end
-
-puts 'Filled In Map'
-puts '-------------'
+puts 'Marked Map'
+puts '----------'
 print_map(map)
 puts
 
