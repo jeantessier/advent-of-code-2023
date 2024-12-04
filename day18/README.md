@@ -3,6 +3,8 @@
 I'm trying this a year later, as I'm waiting for the next entry in the next
 Advent of Code.
 
+## Puzzle 1
+
 First, I create 2D coordinates by following directions and creating waypoints
 along the way.  These waypoints draw a path that ends the same place it started.
 
@@ -32,3 +34,9 @@ answer.  It only took 48 passes before it had marked all the outside and could
 calculate the area inside the path.
 
 I discarded the color information for Puzzle 1.
+
+## Puzzle 2
+
+The coordinate space is just insane.  The x-axis is `0..19005278` and the y-axis
+is `0..11776214`.  That's a map of 223,810,251,638,985 cells, at least 203 PB.
+The graphic approach I took in Puzzle 1 will not work here.
