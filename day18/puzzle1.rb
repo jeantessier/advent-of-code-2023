@@ -1,0 +1,206 @@
+#!/usr/bin/env ruby
+
+# lines = readlines
+# lines = File.readlines('sample.txt') # Answer: 62 (in 62 ms)
+lines = File.readlines('input.txt') # Answer: 44436 (in 3,644 ms)  ** too high **
+
+REGEX = /(?<direction>[DLRU]) (?<distance>\d+) \(#(?<rgb>\h{6})\)/
+
+Coord = Struct.new(:x, :y)
+
+x = 0
+y = 0
+
+path = [ Coord.new(x, y) ]
+
+lines
+  .map { |line| REGEX.match(line) }
+  .filter { |match| match }
+  .each do |match|
+    case match[:direction]
+    when 'D' then x += match[:distance].to_i
+    when 'U' then x -= match[:distance].to_i
+    when 'R' then y += match[:distance].to_i
+    when 'L' then y -= match[:distance].to_i
+    else throw Exception.new("Unknown direction: #{match[:direction]}")
+    end
+
+    path << Coord.new(x, y)
+  end
+
+puts 'Path'
+puts '----'
+puts path
+puts
+
+translate_x = path.map(&:x).min
+translate_y = path.map(&:y).min
+
+translated_path = path.map { |point| Coord.new(point.x - translate_x, point.y - translate_y) }
+
+puts 'Translated Path'
+puts '---------------'
+puts translated_path
+puts
+
+# Renders the map (on *STDOUT* by default)
+def print_map(map, out = STDOUT)
+  map.each do |row|
+    out.puts row.join
+  end
+end
+
+x_range = 0..(translated_path.map(&:x).max)
+y_range = 0..(translated_path.map(&:y).max)
+
+def volume(map)
+  (map.size * map.first.size) - map.map { |row| row.map { |cell| cell == ' ' ? 1 : 0 }.sum }.sum
+end
+
+map = x_range.collect { |_| y_range.collect { |_| '.' } }
+
+puts 'Empty Map'
+puts '---------'
+print_map(map)
+puts
+
+translated_path.each_cons(2) do |p1, p2|
+  puts "  (#{p1.x}, #{p1.y}) --> (#{p2.x}, #{p2.y})"
+  (([ p1.x, p2.x ].min)..([ p1.x, p2.x ].max)).each do |x|
+    (([ p1.y, p2.y ].min)..([ p1.y, p2.y ].max)).each do |y|
+      map[x][y] = '#'
+    end
+  end
+end
+puts
+
+puts 'Map of Path'
+puts '-----------'
+print_map(map)
+puts
+
+# We mark what's outside the path to figure out the area that IS NOT in the
+# lake.  We start by marking the edges, then spiral in towards the center.
+# If a cell is not '#' and it touches a marked cell, it becomes marked.
+
+# Mark the exterior edges
+
+x_range.each do |x|
+  map[x][y_range.first] = ' ' unless map[x][y_range.first] == '#'
+  map[x][y_range.last] = ' ' unless map[x][y_range.last] == '#'
+end
+
+y_range.each do |y|
+  map[x_range.first][y] = ' ' unless map[x_range.first][y] == '#'
+  map[x_range.last][y] = ' ' unless map[x_range.last][y] == '#'
+end
+
+# Spiral in, check all 8 neighbors for a marked cell
+
+def outside?(map, x, y)
+  return false if map[x][y] == '#'
+  return true if map[x][y] == ' '
+
+  map[(x - 1)..(x + 1)].any? do |row|
+    row[(y - 1)..(y + 1)].any? do |cell|
+      cell == ' '
+    end
+  end
+end
+
+previous_volume = -1
+new_volume = volume(map)
+
+while previous_volume != new_volume
+  puts "previous_volume: #{previous_volume}, new volume: #{new_volume}"
+
+  (1...([ x_range.last, y_range.last ].min)).each do |n|
+    (n..(x_range.last - n)).each do |x|
+      map[x][y_range.first + n] = ' ' if outside?(map, x, y_range.first + n)
+      map[x][y_range.last - n] = ' ' if outside?(map, x, y_range.last - n)
+    end
+
+    (n..(y_range.last - n)).each do |y|
+      map[x_range.first + n][y] = ' ' if outside?(map, x_range.first + n, y)
+      map[x_range.last - n][y] = ' ' if outside?(map, x_range.last - n, y)
+    end
+  end
+
+  previous_volume = new_volume
+  new_volume = volume(map)
+
+  puts "new_volume: #{new_volume}"
+end
+
+# def top_left_segment(map, x, y)
+#   return '' if x.zero?
+#
+#   map[x - 1][0...y].join
+# end
+#
+# def left_segment(map, x, y)
+#   map[x][0...y].join
+# end
+#
+# def bottom_left_segment(map, x, y)
+#   return '' if x == map.size - 1
+#
+#   map[x + 1][0...y].join
+# end
+#
+# # Count the number of transitions from the left edge to (x, y).
+# # If odd, we're inside the path.  If even, we're outside.
+# def inside?(map, x, y)
+#   puts "x: #{x}, y: #{y}"
+#
+#   top_left_segment = top_left_segment(map, x, y)
+#   top_left_crossings = top_left_segment.scan(/#+/).size
+#   puts "top_left_segment: #{top_left_segment} (#{top_left_crossings})"
+#
+#   left_segment = left_segment(map, x, y)
+#   left_crossings = left_segment.scan(/#+/).size
+#   puts "left segment: #{left_segment} (#{left_crossings})"
+#
+#   bottom_left_segment = bottom_left_segment(map, x, y)
+#   bottom_left_crossings = bottom_left_segment.scan(/#+/).size
+#   puts "bottom_left_segment: #{bottom_left_segment} (#{bottom_left_crossings})"
+#
+#   (top_left_crossings.odd? && left_crossings.odd? && bottom_left_crossings.odd?)
+# end
+#
+# x_range.each do |x|
+#   y_range.each do |y|
+#     next unless map[x][y] == '.'
+#     map[x][y] = ' ' if inside?(map, x, y)
+#   end
+# end
+
+# def inside?(map, x, y, x_range: nil, y_range: nil)
+#   x_range ||= 0..(map.size - 1)
+#   y_range ||= 0..(map.first.size - 1)
+#
+#   (x_range.first...x).any? { |dx| map[dx][y] == '#' } &&
+#     ((x + 1)..x_range.last).any? { |dx| map[dx][y] == '#' } &&
+#     (y_range.first...y).any? { |dy| map[x][dy] == '#' } &&
+#     ((y + 1)..y_range.last).any? { |dy| map[x][dy] == '#' }
+# end
+#
+# x_range.each do |x|
+#   y_range.each do |y|
+#     next unless map[x][y] == '.'
+#     if inside?(map, x, y, x_range:, y_range:)
+#       map[x][y] = '#'
+#     end
+#   end
+# end
+
+puts 'Filled In Map'
+puts '-------------'
+print_map(map)
+puts
+
+volume = volume(map)
+
+puts 'Volume'
+puts '------'
+puts volume
