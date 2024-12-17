@@ -1,54 +1,40 @@
 #!/usr/bin/env ruby
 
 #
-# Prints my stats as a CSV
+# Prints my stats as a CSV.
 #
 #     ./stats.rb > stats.csv
+# or
+#     ./stats.rb | tee stats.csv
+#
+# It can fetch the overall stats from adventofcode.com, since they are public
+# data.  But getting personal times requires authentication.  I don't know how
+# to do that, so I copy my stats in this script as they become available.
 #
 
-overall_stats = '''
-25   12028   3257  ***
-24   13453   5325  ***
-23   16186   3117  ***
-22   17425   1070  ****
-21   15838  10767  ****
-20   20059   4654  ****
-19   24443   7588  ****
-18   26806   5132  *****
-17   26023   1212  *****
-16   37801   1141  ******
-15   43521   4651  *******
-14   38879   8059  ******
-13   40639   5616  ******
-12   33339  15201  ******
-11   60912   2637  *********
-10   51338  18330  **********
- 9   81271   1484  ***********
- 8   78560  15963  ************
- 7   86822   8062  ************
- 6  109642   2230  **************
- 5   85087  33494  ***************
- 4  138805  19486  ********************
- 3  139538  22313  ********************
- 2  212558  10995  ****************************
- 1  251147  86222  *****************************************
-'''.lines
-   .map(&:chomp)
-   .reject {|line| line.empty?}
-   .map(&:split)
-   .map {|row| row[0..2]}
-   .map {|row| row.map(&:to_i)}
-   .reduce([]) do |memo, row|
-      day = row[0]
-      first_and_second_puzzles = row[1]
-      first_puzzle_only = row[2]
-      memo[day] = {
-        finished_first_puzzle: first_and_second_puzzles + first_puzzle_only,
-        finished_second_puzzle: first_and_second_puzzles,
-      }
-      memo
-   end
+require 'net/http'
 
+STATS_REGEX = %r{<a href="/2023/day/\d+">\s*(?<day>\d+)\s+<span class="stats-both">\s*(?<both>\d+)</span>\s*<span class="stats-firstonly">\s*(?<firstonly>\d+)</span>}
+
+uri = URI.parse('https://adventofcode.com/2023/stats')
+response = Net::HTTP.get_response(uri)
+overall_stats = response.body
+                        .lines
+                        .map { |line| STATS_REGEX.match(line) }.compact
+                        .map { |match| match[1..] }
+                        .map { |row| row.map(&:to_i) }
+                        .reduce([]) do |memo, row|
+                          day = row[0]
+                          first_and_second_puzzles = row[1]
+                          first_puzzle_only = row[2]
+                          memo[day] = {
+                            finished_first_puzzle: first_and_second_puzzles + first_puzzle_only,
+                            finished_second_puzzle: first_and_second_puzzles,
+                          }
+                          memo
+                        end
+
+# https://adventofcode.com/2023/leaderboard/self
 personal_times = '''
  16   01:34:54    5101      0   02:34:10    5977      0
  15   00:38:27    7039      0   01:18:24    6049      0
@@ -75,9 +61,9 @@ personal_times = '''
    .map do |row|
       day = row[0]
       my_first_puzzle_rank = row[1]
-      total_first_puzzle = overall_stats[row[0]][:finished_first_puzzle]
+      total_first_puzzle = overall_stats[day][:finished_first_puzzle]
       my_second_puzzle_rank = row[2]
-      total_second_puzzle = overall_stats[row[0]][:finished_second_puzzle]
+      total_second_puzzle = overall_stats[day][:finished_second_puzzle]
       [
         day,
         '',
