@@ -37,7 +37,7 @@ bundle exec ./puzzle1.rb
 ```
 
 But that wasn't good enough for a 142x142 map.  There are too many possible
-possible paths through the middle.
+paths through the middle.
 
 I tried various ways to tease the algorithm in the right direction.  I used a
 Dijkstra algorithm to find estimated distances to the destination and use that
