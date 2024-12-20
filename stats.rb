@@ -55,36 +55,36 @@ personal_times = '''
   1       >24h  149845      0       >24h  108713      0
 '''.lines
    .map(&:chomp)
-   .reject {|line| line.empty?}
+   .reject { |line| line.empty? }
    .map(&:split)
-   .map {|row| [row[0], row[2], row[5]]}
-   .map {|row| row.map(&:to_i)}
+   .map { |row| [row[0], row[2], row[5]] }
+   .map { |row| row.map(&:to_i) }
    .map do |day, my_first_puzzle_rank, my_second_puzzle_rank|
-      total_first_puzzle = overall_stats[day][:finished_first_puzzle]
-      total_second_puzzle = overall_stats[day][:finished_second_puzzle]
-      [
-        day,
-        '',
-        my_first_puzzle_rank.positive? ? my_first_puzzle_rank : '',
-        total_first_puzzle,
-        my_first_puzzle_rank.positive? ? ((1.0 - (my_first_puzzle_rank.to_f / total_first_puzzle)) * 100).to_i : '0',
-        '',
-        my_second_puzzle_rank.positive? ? my_second_puzzle_rank : '',
-        total_second_puzzle,
-        my_second_puzzle_rank.positive? ? ((1.0 - (my_second_puzzle_rank.to_f / total_second_puzzle)) * 100).to_i : '0',
-      ]
+     total_first_puzzle = overall_stats[day][:finished_first_puzzle]
+     total_second_puzzle = overall_stats[day][:finished_second_puzzle]
+     [
+       day,
+       '',
+       my_first_puzzle_rank.positive? ? my_first_puzzle_rank : '',
+       total_first_puzzle,
+       my_first_puzzle_rank.positive? ? ((1.0 - (my_first_puzzle_rank.to_f / total_first_puzzle)) * 100).to_i : '0',
+       '',
+       my_second_puzzle_rank.positive? ? my_second_puzzle_rank : '',
+       total_second_puzzle,
+       my_second_puzzle_rank.positive? ? ((1.0 - (my_second_puzzle_rank.to_f / total_second_puzzle)) * 100).to_i : '0',
+     ]
    end
 
 File.open('stats.csv', 'w', 0644) do |f|
-  f.puts "Day,,Part 1 Rank,Part 1 Total,Part 1 Percentile,,Part 2 Rank,Part 2 Total,Part 2 Percentile"
+  f.puts 'Day,,Part 1 Rank,Part 1 Total,Part 1 Percentile,,Part 2 Rank,Part 2 Total,Part 2 Percentile'
   personal_times.each do |row|
     f.puts row.join(',')
   end
 end
 
 File.open('stats.md', 'w', 0644) do |f|
-  f.puts "| Day |  | Part 1 Rank | Part 1 Total | Part 1 Percentile |  | Part 2 Rank | Part 2 Total | Part 2 Percentile |"
-  f.puts "|:---:|--|:-----------:|:------------:|:-----------------:|--|:-----------:|:------------:|:-----------------:|"
+  f.puts '| Day |  | Part 1 Rank | Part 1 Total | Part 1 Percentile |  | Part 2 Rank | Part 2 Total | Part 2 Percentile |'
+  f.puts '|:---:|--|:-----------:|:------------:|:-----------------:|--|:-----------:|:------------:|:-----------------:|'
   personal_times.each do |row|
     row[0] = format('[%d](day%02d)', row[0], row[0])
     f.puts '| ' + row.join(' | ') + ' |'
