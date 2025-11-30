@@ -26,7 +26,7 @@ and it has been losing popularity lately.  I feel that's unfortunate.
 I just tinker on these late in the evening.  For these, I care more about coming
 up with a solution that I find elegant than adhering to strict engineering
 discipline.  I try to keep the code "simple", so each solution is a single
-script that operates on an input text files and writes to stdout.
+script that operates on an input text file and writes to stdout.
 
 ### Stats
 
