@@ -1,6 +1,6 @@
 require './search'
 
-RSpec.describe "Search" do
+describe "Search" do
   subject { search arrangements, groups }
 
   context "with a single group" do

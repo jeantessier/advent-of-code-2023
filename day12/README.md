@@ -22,13 +22,13 @@ function.  After I was done with the puzzle, I migrated these tests to RSpec.
 You can run them with:
 
 ```bash
-./bin/rspec search_tests.rb
+./bin/rspec specs
 ```
 
 Or see the full list of tests with:
 
 ```bash
-./bin/rspec --format documentation search_tests.rb
+./bin/rspec --format documentation specs
 ```
 
 > You may need to install RSpec with:
