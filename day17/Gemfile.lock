@@ -7,9 +7,10 @@ PLATFORMS
   arm64-darwin-22
   arm64-darwin-23
   arm64-darwin-24
+  arm64-darwin-25
 
 DEPENDENCIES
   rb_heap
 
 BUNDLED WITH
-  4.0.3
+  4.0.12
